@@ -1,184 +1,1496 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>ANA CLARA • MESTRE DO ENEM</title>
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        :root { 
-            --bg: #000; --card: #121212; --accent: #bf5af2; 
-            --success: #30d158; --danger: #ff453a; --text: #fff; 
-            --dim: #8e8e93; --border: #1c1c1e; --gold: #ffd700;
-        }
-        * { margin:0; padding:0; box-sizing:border-box; font-family:-apple-system, "SF Pro Display", sans-serif; }
-        body { background:var(--bg); color:var(--text); padding-bottom:120px; -webkit-font-smoothing: antialiased; }
-        .header { position:sticky; top:0; background:rgba(0,0,0,0.85); backdrop-filter: blur(20px); padding: 25px 20px; border-bottom:0.5px solid var(--border); z-index:1000; }
-        .user-badge { font-size: 10px; font-weight: 900; color: var(--gold); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; display: block; }
-        .card { background:var(--card); border-radius:24px; padding:22px; margin-bottom:18px; border:1px solid var(--border); }
-        .highlight { border: 1.5px solid var(--accent) !important; box-shadow: 0 0 20px rgba(191, 90, 242, 0.2); }
-        .tag { font-size:11px; font-weight:800; color:var(--accent); text-transform:uppercase; margin-bottom:10px; display:block; }
-        .topic-item { display:flex; align-items:flex-start; gap:12px; font-size:14px; background:rgba(255,255,255,0.04); padding:12px; border-radius:14px; margin-bottom:8px; border-left: 4px solid var(--accent); }
-        .timer-display { font-size:85px; font-weight:100; text-align:center; margin:10px 0; font-variant-numeric: tabular-nums; letter-spacing: -3px; }
-        input { background:#1c1c1e; border:1px solid #2c2c2e; color:#fff; padding:15px; border-radius:15px; font-size:16px; width:100%; text-align:center; }
-        .btn { width:100%; padding:20px; border-radius:20px; border:none; font-weight:bold; font-size:16px; cursor:pointer; }
-        .btn-pomo { background: var(--accent); color:white; }
-        .nav { position:fixed; bottom:0; width:100%; background:rgba(10,10,10,0.95); backdrop-filter: blur(25px); display:flex; justify-content:space-around; padding:15px 0 35px; border-top:0.5px solid var(--border); z-index: 2000; }
-        .nav-btn { background:none; border:none; color:var(--dim); font-size:10px; display:flex; flex-direction:column; align-items:center; gap:6px; width: 33%; }
-        .nav-btn.on { color:var(--accent); }
-        .tab { display:none; } .tab.active { display:block; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Cuidado LLC • Fazenda — Sr. Laci Figueiredo Neves</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<style>
+  :root {
+    --bg: #f4f7f5;
+    --card: #ffffff;
+    --primary: #1b5e20;
+    --primary-light: #e8f5e9;
+    --secondary: #0d47a1;
+    --secondary-light: #e3f2fd;
+    --warn: #e65100;
+    --warn-light: #fff3e0;
+    --danger: #b71c1c;
+    --danger-light: #ffebee;
+    --text: #1c2822;
+    --muted: #546e63;
+    --border: #d5e2db;
+    --shadow: 0 4px 14px rgba(0,0,0,0.06);
+  }
+  * { box-sizing: border-box; font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 90px; }
+  header {
+    background: linear-gradient(135deg, #1b5e20, #2e7d32);
+    color: white; padding: 16px; position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+  header h1 { margin: 0; font-size: 1.18rem; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+  header p { margin: 4px 0 0; font-size: 0.82rem; opacity: 0.94; }
+  .nav-tabs {
+    display: flex; background: #fff; border-bottom: 2px solid var(--border);
+    position: sticky; top: 68px; z-index: 99;
+  }
+  .nav-tab {
+    flex: 1; padding: 14px 6px; border: none; background: none; font-weight: 700;
+    font-size: 0.88rem; color: var(--muted); cursor: pointer; border-bottom: 3px solid transparent;
+    transition: all 0.2s; -webkit-tap-highlight-color: transparent;
+  }
+  .nav-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: var(--primary-light); }
+  .container { max-width: 820px; margin: 0 auto; padding: 14px; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+  .card {
+    background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 14px;
+    border: 1px solid var(--border); box-shadow: var(--shadow);
+  }
+  .card h2 { margin: 0 0 10px; font-size: 1.06rem; color: var(--primary); display: flex; align-items: center; gap: 8px; }
+  .card h3 { margin: 14px 0 8px; font-size: 0.95rem; color: var(--text); }
+  .big-btn-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  @media (max-width: 520px) {
+    .big-btn-grid { grid-template-columns: 1fr; }
+    .form-grid { grid-template-columns: 1fr !important; }
+  }
+  .choice-btn {
+    padding: 14px 10px; border-radius: 14px; border: 2px solid var(--border);
+    background: #fff; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+    text-align: center; transition: 0.15s; color: var(--text);
+  }
+  .choice-btn.selected-green { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+  .choice-btn.selected-warn { background: var(--warn-light); border-color: var(--warn); color: var(--warn); }
+  .choice-btn.selected-danger { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
+  .choice-btn.locked { opacity: 0.52; cursor: not-allowed; background: #eceff1; }
+  .symptom-chip {
+    display: inline-flex; align-items: center; gap: 6px; padding: 11px 13px;
+    border-radius: 12px; border: 2px solid var(--border); background: #fff;
+    font-size: 0.9rem; font-weight: 600; margin: 4px 2px; cursor: pointer;
+    user-select: none;
+  }
+  .symptom-chip.active-ok { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+  .symptom-chip.active-alert { background: var(--danger-light); border-color: var(--danger); color: var(--danger); }
+  .btn-primary {
+    width: 100%; padding: 15px; border: none; border-radius: 14px;
+    background: var(--primary); color: white; font-size: 1.02rem; font-weight: 800;
+    cursor: pointer; box-shadow: 0 4px 12px rgba(27,94,32,0.28);
+  }
+  .btn-primary:active { transform: scale(0.99); }
+  .btn-secondary {
+    padding: 11px 14px; border: 1.5px solid var(--secondary); border-radius: 12px;
+    background: var(--secondary-light); color: var(--secondary); font-weight: 700;
+    font-size: 0.88rem; cursor: pointer;
+  }
+  .btn-ai {
+    width: 100%; padding: 13px; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #0d47a1, #1976d2); color: white;
+    font-weight: 800; font-size: 0.95rem; cursor: pointer; margin-top: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .alert-box {
+    padding: 12px 14px; border-radius: 12px; margin-top: 10px; font-size: 0.9rem; line-height: 1.42;
+  }
+  .alert-green { background: var(--primary-light); border-left: 5px solid var(--primary); color: #144318; }
+  .alert-warn { background: var(--warn-light); border-left: 5px solid var(--warn); color: #7a2c00; }
+  .alert-danger { background: var(--danger-light); border-left: 5px solid var(--danger); color: #7f0000; }
+  .alert-info { background: var(--secondary-light); border-left: 5px solid var(--secondary); color: #082e6b; }
+  .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  .form-group { display: flex; flex-direction: column; }
+  .form-group label { font-size: 0.8rem; font-weight: 700; color: var(--muted); margin-bottom: 4px; }
+  .form-group input, .form-group select, .form-group textarea {
+    padding: 10px; border-radius: 10px; border: 1.5px solid var(--border);
+    font-size: 0.95rem; background: #fff; width: 100%;
+  }
+  .badge {
+    display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 0.76rem; font-weight: 800;
+  }
+  .badge-green { background: #c8e6c9; color: #1b5e20; }
+  .badge-warn { background: #ffe0b2; color: #e65100; }
+  .badge-danger { background: #ffcdd2; color: #b71c1c; }
+  .badge-blue { background: #bbdefb; color: #0d47a1; }
+  .drop-zone {
+    border: 2px dashed #1976d2; background: #f0f7ff; border-radius: 14px;
+    padding: 16px; text-align: center; cursor: pointer; transition: 0.2s;
+  }
+  .drop-zone:hover { background: #e3f2fd; }
+  .progress-wrap {
+    margin-top: 10px; background: #e0e0e0; border-radius: 999px; height: 10px; overflow: hidden; display: none;
+  }
+  .progress-bar { height: 100%; width: 0%; background: #1976d2; transition: width 0.25s; }
+  .exam-item {
+    border: 1px solid var(--border); border-radius: 12px; padding: 12px; margin-top: 10px; background: #fafcfb;
+  }
+  .checklist-item {
+    display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-bottom: 1px solid #edf2ef;
+    font-size: 0.9rem;
+  }
+  .checklist-item input[type="checkbox"] { width: 20px; height: 20px; margin-top: 2px; accent-color: var(--primary); flex-shrink: 0; }
+  .chart-box { position: relative; height: 240px; width: 100%; margin-top: 10px; }
+  .pill-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+  .mini-stat {
+    flex: 1; min-width: 120px; background: #f7faf8; border: 1px solid var(--border);
+    border-radius: 12px; padding: 10px; text-align: center;
+  }
+  .mini-stat .val { font-size: 1.12rem; font-weight: 800; color: var(--primary); }
+  .mini-stat .lbl { font-size: 0.74rem; color: var(--muted); font-weight: 600; margin-top: 2px; }
+  .toast-msg {
+    position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+    background: #1b5e20; color: #fff; padding: 12px 20px; border-radius: 999px;
+    font-weight: 700; font-size: 0.9rem; box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+    z-index: 9999; display: none; max-width: 92vw; text-align: center;
+  }
+  @media print {
+    header, .nav-tabs, .no-print, .toast-msg { display: none !important; }
+    .tab-panel { display: block !important; }
+    body { background: #fff; padding: 0; }
+    .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  }
+</style>
 </head>
 <body>
 
-<div class="header">
-    <span class="user-badge">✨ ACESSO EXCLUSIVO • ANA CLARA</span>
-    <div style="display:flex; justify-content:space-between; align-items:center">
-        <h2 style="font-size:24px;">ENEM <span style="font-weight:200; color:var(--accent)">MASTER</span></h2>
-        <input type="date" id="date-picker" onchange="render()" style="width:130px; padding:8px; font-size:12px; border-radius:10px; background: #1c1c1e; color: white; border: none;">
-    </div>
+<header>
+  <h1>
+    <span>🌿 Cuidado LLC • Fazenda</span>
+    <span style="font-size:0.78rem; background:rgba(255,255,255,0.22); padding:4px 10px; border-radius:999px; white-space:nowrap;">Sr. Laci (72a)</span>
+  </h1>
+  <p>Monitoramento Diário, Leitor Local de PDF/Foto &amp; Estadiamento Clínico (Offline no Celular)</p>
+</header>
+
+<div class="nav-tabs no-print" id="mainNavTabs">
+  <button type="button" class="nav-tab active" data-tab="diario">1. Diário do Sogro</button>
+  <button type="button" class="nav-tab" data-tab="exames">2. Exames &amp; USG (IA Local)</button>
+  <button type="button" class="nav-tab" data-tab="painel">3. Painel &amp; Estadiamento</button>
 </div>
 
-<div class="container" style="padding:15px">
-    <div id="t-hoje" class="tab active">
-        <h3 id="hoje-titulo" style="margin-bottom:20px; font-size:18px;"></h3>
-        <div id="content-hoje"></div>
-    </div>
-    <div id="t-agenda" class="tab">
-        <h3 style="margin-bottom:20px">Cronograma 32 Semanas Completo</h3>
-        <div id="lista-agenda"></div>
-    </div>
-    <div id="t-tools" class="tab">
-        <div class="card" style="text-align:center">
-            <span id="pomo-status" style="font-weight:900; color:var(--accent); font-size:12px;">MODO FOCO</span>
-            <div class="timer-display" id="timer">25:00</div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px">
-                <input type="number" id="foco-in" value="25">
-                <input type="number" id="pausa-in" value="5">
-            </div>
-            <button id="pomo-btn" onclick="togglePomo()" class="btn btn-pomo">INICIAR SESSÃO</button>
-        </div>
-        <div class="card">
-            <h4>Calculadora TRI</h4>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin:20px 0">
-                <input type="number" id="m-ac" placeholder="MAT">
-                <input type="number" id="n-ac" placeholder="NAT">
-                <input type="number" id="h-ac" placeholder="HUM">
-                <input type="number" id="l-ac" placeholder="LIN">
-            </div>
-            <button onclick="calc()" style="background:var(--success)" class="btn">VER RESULTADO</button>
-            <div id="res-calc" style="text-align:center; margin-top:20px; font-weight:bold; font-size: 22px;"></div>
-        </div>
-        <a href="https://www.gov.br/inep/pt-br/areas-de-atuacao/avaliacao-e-exames-educacionais/enem/provas-e-gabaritos" target="_blank" class="btn" style="background:#2c2c2e; color:white; text-align:center; text-decoration:none; display:block">PROVAS OFICIAIS INEP</a>
-    </div>
-</div>
+<div id="toastBanner" class="toast-msg"></div>
 
-<nav class="nav">
-    <button class="nav-btn on" onclick="nav('t-hoje', this)"><i class="fas fa-star"></i>Hoje</button>
-    <button class="nav-btn" onclick="nav('t-agenda', this)"><i class="fas fa-list-ul"></i>Agenda</button>
-    <button class="nav-btn" onclick="nav('t-tools', this)"><i class="fas fa-stopwatch"></i>Extras</button>
-</nav>
+<div class="container">
+
+  <!-- ==================== ABA 1: DIÁRIO DO SOGRO ==================== -->
+  <div id="tab-diario" class="tab-panel active">
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+        <h2 style="margin:0;">☀️ Como o Sr. Laci está hoje?</h2>
+        <div class="no-print" style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button type="button" id="btnSimularOntem" class="btn-secondary" style="padding:7px 10px; font-size:0.78rem;">🧪 Simular ontem 100% OK</button>
+          <button type="button" id="btnResetarHoje" class="btn-secondary" style="padding:7px 10px; font-size:0.78rem; border-color:#888; color:#444; background:#f5f5f5;">Limpar hoje</button>
+        </div>
+      </div>
+
+      <div style="margin-top:10px;">
+        <label for="diaryDate" style="font-size:0.82rem; font-weight:700; color:var(--muted);">Data do registro:</label>
+        <input type="date" id="diaryDate" style="padding:8px; border-radius:10px; border:1.5px solid var(--border); font-weight:700;">
+      </div>
+
+      <h3>1. Energia e disposição hoje:</h3>
+      <div class="big-btn-grid">
+        <button type="button" class="choice-btn selected-green" data-energy="forte">💪 Forte / Normal</button>
+        <button type="button" class="choice-btn" data-energy="cansado">😐 Meio cansado</button>
+        <button type="button" class="choice-btn" data-energy="fraco">🪫 Muito fraco</button>
+      </div>
+
+      <h3>2. Sentiu alguma coisa diferente hoje?</h3>
+      <div id="symptomsContainer">
+        <span class="symptom-chip active-ok" data-sym="nenhum">✅ Nada, tudo normal</span>
+        <span class="symptom-chip" data-sym="febre">🌡️ Febre / Calafrio</span>
+        <span class="symptom-chip" data-sym="suor">💦 Suor molhando a roupa à noite</span>
+        <span class="symptom-chip" data-sym="barriga">🤢 Dor / Peso lado esquerdo (baço)</span>
+        <span class="symptom-chip" data-sym="inguas">🫧 Ínguas maiores (pescoço/axila)</span>
+        <span class="symptom-chip" data-sym="roxo">🩸 Mancha roxa / Sangramento</span>
+        <span class="symptom-chip" data-sym="tosse">🫁 Tosse / Falta de ar / Infecção</span>
+      </div>
+
+      <h3>3. O que fez na fazenda hoje?</h3>
+      <p style="font-size:0.82rem; color:var(--muted); margin:0 0 6px;">🟢 <b>Liberado (Capataz / Máx. 1h30–2h30 nos horários frescos):</b></p>
+      <div class="big-btn-grid">
+        <button type="button" class="choice-btn" data-act="supervisao" data-blocked="0">🤠 Supervisão / Capataz</button>
+        <button type="button" class="choice-btn" data-act="ordenha_limpa" data-blocked="0">🥛 Ordenha (Piso Cimentado)</button>
+        <button type="button" class="choice-btn" data-act="formula_racao" data-blocked="0">📋 Só Formulação da Ração</button>
+      </div>
+
+      <p style="font-size:0.82rem; color:var(--danger); margin:12px 0 6px;">🔴 <b>Tarefa Exclusiva dos 2 Netos (Bloqueado pelo risco ao baço e infecção):</b></p>
+      <div class="big-btn-grid">
+        <button type="button" class="choice-btn" data-act="pa_racao" data-blocked="1">🪣 Pá / Sacos de Ração</button>
+        <button type="button" class="choice-btn" data-act="chiqueiro" data-blocked="1">🐖 Limpar Chiqueiro / Esterco</button>
+        <button type="button" class="choice-btn" data-act="peso_gado" data-blocked="1">🏋️ Latão Cheio / Gado Bravo</button>
+      </div>
+      <div id="activityWarning" class="alert-box alert-danger" style="display:none;">
+        ⚠️ <b>Atenção Sr. Laci:</b> Bater ração na pá, limpar chiqueiro ou carregar peso força o baço aumentado e traz risco de infecção. Deixe esse serviço pesado para os dois netos!
+      </div>
+
+      <h3>4. Hidratação e Fim de Tarde (Álcool 0,0%):</h3>
+      <div class="big-btn-grid">
+        <button type="button" class="choice-btn selected-green" data-drink="agua_coco">🥥 Água / Água de Coco</button>
+        <button type="button" class="choice-btn" data-drink="agua_gas_limao">🍋 Água c/ Gás e Limão</button>
+        <button type="button" class="choice-btn locked" id="btnCervejaZero" data-drink="cerveja_zero">🍺 1 Cerveja 0,0%</button>
+      </div>
+      <div id="cervejaStatusBox" class="alert-box alert-warn" style="margin-top:8px;">
+        🔒 <b>Cerveja 0,0% bloqueada hoje:</b> Só libera no fim da tarde quando o registro de <b>ontem</b> estiver 100% tudo certo (energia forte, sem sintomas e sem serviço pesado).
+      </div>
+
+      <div class="form-group" style="margin-top:12px;">
+        <label for="diaryNote">Observação do dia (opcional):</label>
+        <input type="text" id="diaryNote" placeholder="Ex.: Pressão 12x8, caminhou cedo, netos limparam o curral...">
+      </div>
+
+      <button type="button" id="btnSalvarDiario" class="btn-primary" style="margin-top:14px;">💾 SALVAR REGISTRO DE HOJE</button>
+      <div id="saveFeedback" class="alert-box alert-green" style="display:none;"></div>
+    </div>
+
+    <div class="card">
+      <h2>📅 Últimos Registros do Diário (Salvos no Aparelho)</h2>
+      <div id="diaryRecentList"></div>
+    </div>
+  </div>
+
+  <!-- ==================== ABA 2: EXAMES & ULTRASSOM (IA LOCAL) ==================== -->
+  <div id="tab-exames" class="tab-panel">
+    <div class="card" style="background:linear-gradient(135deg, #e3f2fd, #f3e8ff); border-color:#90caf9;">
+      <h2 style="color:#0d47a1;">🤖 Leitor Inteligente Offline de PDF e Foto</h2>
+      <p style="font-size:0.86rem; margin:0 0 10px; line-height:1.45;">
+        Envie o <b>PDF original do laboratório/clínica</b> ou uma <b>foto nítida do laudo</b>. O leitor embutido no navegador extrai o texto localmente (sem mandar dados para fora do celular), identifica automaticamente <b>Hemograma</b> ou <b>Ultrassom</b>, preenche os números e já atualiza os gráficos e o <b>Estadiamento Clínico</b>.
+      </p>
+      <div class="drop-zone" id="dropZoneTrigger">
+        <div style="font-size:1.8rem;">📄📸</div>
+        <div style="font-weight:800; color:#0d47a1; margin-top:4px;">Toque aqui para escolher PDF ou Foto do Exame</div>
+        <div style="font-size:0.78rem; color:var(--muted); margin-top:2px;">Aceita PDF de laboratório (CEMIR, Hermes Pardini, etc.), PDF de Ultrassom ou foto JPG/PNG</div>
+        <input type="file" id="aiFileInput" accept=".pdf,image/*" style="display:none;">
+      </div>
+      <div class="progress-wrap" id="aiProgressWrap">
+        <div class="progress-bar" id="aiProgressBar"></div>
+      </div>
+      <div id="aiStatusText" style="font-size:0.82rem; font-weight:700; color:#0d47a1; margin-top:6px;"></div>
+
+      <div style="margin-top:10px;">
+        <label for="rawPasteText" style="font-size:0.8rem; font-weight:700; color:#0d47a1;">Ou cole aqui o texto copiado do laudo / WhatsApp:</label>
+        <textarea id="rawPasteText" rows="3" style="width:100%; border-radius:10px; border:1.5px solid #90caf9; padding:8px; font-size:0.84rem;" placeholder="Cole o texto do hemograma ou laudo do ultrassom aqui..."></textarea>
+        <button type="button" id="btnInterpretarTexto" class="btn-ai">✨ Interpretar Texto Colado Automaticamente</button>
+      </div>
+      <div id="aiExtractionResult" class="alert-box alert-info" style="display:none;"></div>
+    </div>
+
+    <!-- FORMULÁRIO HEMOGRAMA / LAB -->
+    <div class="card">
+      <h2>🩸 Registrar / Conferir Hemograma &amp; Laboratório</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="labDate">Data do Exame *</label>
+          <input type="date" id="labDate">
+        </div>
+        <div class="form-group">
+          <label for="labLeuco">Leucócitos Totais (/mm³)</label>
+          <input type="number" id="labLeuco" placeholder="Ex: 29050">
+        </div>
+        <div class="form-group">
+          <label for="labLinfo">Linfócitos Absolutos (/mm³) *</label>
+          <input type="number" id="labLinfo" placeholder="Ex: 20045">
+        </div>
+        <div class="form-group">
+          <label for="labHb">Hemoglobina (g/dL) *</label>
+          <input type="number" step="0.1" id="labHb" placeholder="Ex: 16.0">
+        </div>
+        <div class="form-group">
+          <label for="labPlaq">Plaquetas (mil/mm³) *</label>
+          <input type="number" id="labPlaq" placeholder="Ex: 187">
+        </div>
+        <div class="form-group">
+          <label for="labLdh">LDH (U/L)</label>
+          <input type="number" step="0.1" id="labLdh" placeholder="Ex: 363.1">
+        </div>
+        <div class="form-group">
+          <label for="labB2m">Beta-2-Microglobulina (mg/L)</label>
+          <input type="number" step="0.01" id="labB2m" placeholder="Ex: 2.88">
+        </div>
+        <div class="form-group">
+          <label for="labFileManual">Anexo Foto/PDF (salvo offline)</label>
+          <input type="file" id="labFileManual" accept=".pdf,image/*">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:8px;">
+        <label for="labNote">Observação do Laudo:</label>
+        <input type="text" id="labNote" placeholder="Ex.: Imunofenotipagem CD34-, CD38-, ZAP-70 / CEMIR">
+      </div>
+      <button type="button" id="btnSalvarHemograma" class="btn-primary" style="margin-top:12px;">➕ Salvar Hemograma no Histórico</button>
+
+      <h3>Histórico de Hemogramas (Salvos no Celular)</h3>
+      <div id="labHistoryList"></div>
+    </div>
+
+    <!-- FORMULÁRIO ULTRASSOM -->
+    <div class="card">
+      <h2>🖥️ Registrar / Conferir Ultrassom (Abdome, Axilas e Cervical)</h2>
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="usgDate">Data do Ultrassom *</label>
+          <input type="date" id="usgDate">
+        </div>
+        <div class="form-group">
+          <label for="usgSpleen">Baço — Maior eixo (cm)</label>
+          <input type="number" step="0.1" id="usgSpleen" placeholder="Ex: 14.5 (Normal ≤ 12-13)">
+        </div>
+        <div class="form-group">
+          <label for="usgAxilla">Maior Linfonodo Axilar (cm)</label>
+          <input type="number" step="0.1" id="usgAxilla" placeholder="Ex: 2.4">
+        </div>
+        <div class="form-group">
+          <label for="usgCervical">Maior Linfonodo Cervical (cm)</label>
+          <input type="number" step="0.1" id="usgCervical" placeholder="Ex: 1.8">
+        </div>
+        <div class="form-group">
+          <label for="usgLiver">Fígado / Abdome</label>
+          <select id="usgLiver">
+            <option value="normal">Fígado tamanho normal / homogêneo</option>
+            <option value="esteatose">Esteatose hepática leve</option>
+            <option value="hepatomegalia">Hepatomegalia (fígado aumentado)</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="usgFileManual">Anexo Foto/PDF do USG</label>
+          <input type="file" id="usgFileManual" accept=".pdf,image/*">
+        </div>
+      </div>
+      <div class="form-group" style="margin-top:8px;">
+        <label for="usgNote">Resumo dos achados do Ultrassom:</label>
+        <input type="text" id="usgNote" placeholder="Ex.: Esplenomegalia homogênea, linfonodomegalias axilares bilaterais...">
+      </div>
+      <button type="button" id="btnSalvarUltrassom" class="btn-primary" style="margin-top:12px;">➕ Salvar Ultrassom no Histórico</button>
+
+      <h3>Histórico de Ultrassons (Comparativo de Medidas)</h3>
+      <div id="usgHistoryList"></div>
+    </div>
+  </div>
+
+  <!-- ==================== ABA 3: PAINEL DA FAMÍLIA & ESTADIAMENTO ==================== -->
+  <div id="tab-painel" class="tab-panel">
+
+    <!-- ESTADIAMENTO CLÍNICO AUTOMÁTICO -->
+    <div class="card" style="border:2px solid #1b5e20;">
+      <h2>🩺 Estadiamento Atual &amp; Estado Geral (Automático)</h2>
+      <div id="stagingBanner" class="alert-box alert-green"></div>
+      <div class="pill-row" id="clinicalKpis"></div>
+      <div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:12px;" class="no-print">
+        <button type="button" id="btnCopiarWhats" class="btn-primary" style="flex:2; min-width:220px;">📲 COPIAR RESUMO COMPLETO PARA WHATSAPP</button>
+        <button type="button" id="btnImprimir" class="btn-secondary" style="flex:1; min-width:140px;">🖨️ Salvar PDF / Imprimir</button>
+      </div>
+      <div id="whatsPreviewBox" style="display:none; margin-top:10px;">
+        <label for="whatsPreviewText" style="font-size:0.78rem; font-weight:700; color:var(--primary);">✅ Copiado! Prévia do boletim pronto para colar no WhatsApp:</label>
+        <textarea id="whatsPreviewText" rows="11" readonly style="width:100%; margin-top:4px; padding:10px; border-radius:10px; border:1px solid var(--border); font-size:0.82rem; background:#f9fbf9;"></textarea>
+      </div>
+    </div>
+
+    <!-- GRÁFICOS -->
+    <div class="card">
+      <h2>📈 Curva de Linfócitos &amp; Critério iwCLL (+50%)</h2>
+      <p style="font-size:0.8rem; color:var(--muted); margin:0;">Linha azul: Linfócitos absolutos (mil/mm³). Linha vermelha tracejada: limite de +50% sobre o exame anterior.</p>
+      <div class="chart-box" id="lymphChartContainer"><canvas id="lymphChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <h2>📊 Evolução Diária de Energia &amp; Sintomas (14 dias)</h2>
+      <div class="chart-box" id="energyChartContainer"><canvas id="energyChart"></canvas></div>
+    </div>
+
+    <!-- CRONOGRAMA DE CONDUTAS -->
+    <div class="card">
+      <h2>📅 Roteiro de Condutas (Semanal, Mensal e Trimestral)</h2>
+      <h3>Todo Domingo (Revisão Semanal da Família)</h3>
+      <div class="checklist-item"><input type="checkbox" id="chk_w1" class="schedule-chk"><span>Conferir peso corporal na balança (alerta se perda involuntária &gt; 2–3 kg no mês).</span></div>
+      <div class="checklist-item"><input type="checkbox" id="chk_w2" class="schedule-chk"><span>Revisar no diário se houve cansaço fora do normal, suor noturno ou febre.</span></div>
+      <div class="checklist-item"><input type="checkbox" id="chk_w3" class="schedule-chk"><span>Confirmar com os 2 netos que chiqueiro, pá de ração e peso ficaram 100% com eles.</span></div>
+
+      <h3>Todo Mês (Prevenção &amp; Infecções)</h3>
+      <div class="checklist-item"><input type="checkbox" id="chk_m1" class="schedule-chk"><span>Checar cartão de vacinas (Gripe, Pneumonia VPC13/VPP23, COVID, Herpes-Zóster inativada Shingrix — <b>NUNCA aplicar vacina de vírus vivo</b>).</span></div>
+      <div class="checklist-item"><input type="checkbox" id="chk_m2" class="schedule-chk"><span>Revisar pressão arterial média (hipertenso) e adesão aos anti-hipertensivos.</span></div>
+
+      <h3>A cada 3 Meses (Consulta Hematológica &amp; Exames)</h3>
+      <div class="checklist-item"><input type="checkbox" id="chk_q1" class="schedule-chk"><span>Repetir Hemograma completo + reticulócitos + LDH + função renal/hepática para calcular tempo de duplicação dos linfócitos.</span></div>
+      <div class="checklist-item"><input type="checkbox" id="chk_q2" class="schedule-chk"><span>Repetir Ultrassom de Abdome Total (baço/fígado) + Cadeias Linfonodais (cervical, axilar e inguinal) conforme pedido médico (3 a 6 meses).</span></div>
+    </div>
+
+    <!-- BACKUP ENTRE CELULARES -->
+    <div class="card no-print">
+      <h2>📲 Sincronizar entre o Celular do Sr. Laci e o Seu</h2>
+      <p style="font-size:0.82rem; color:var(--muted); margin:0 0 10px;">Como os dados ficam salvos offline no aparelho por privacidade, use os botões abaixo para transferir o histórico pelo WhatsApp quando quiser:</p>
+      <div style="display:flex; gap:8px; flex-wrap:wrap;">
+        <button type="button" id="btnExportBackup" class="btn-secondary">⬇️ Exportar Backup (.json)</button>
+        <button type="button" id="btnImportBackupTrigger" class="btn-secondary">⬆️ Importar Backup (.json)</button>
+        <input type="file" id="importFile" accept=".json" style="display:none;">
+      </div>
+    </div>
+
+  </div>
+</div>
 
 <script>
-    // MATRIZ DEFINITIVA - 32 SEMANAS COMPLETAS E ÚNICAS
-    const db = {
-        1: { 1: {m:"Português", t:"Literatura Medieval", top:["Trovadorismo: Cantigas","Humanismo: Teatro de Gil Vicente","Classicismo e Renascimento"]}, 2: {m:"Física", t:"Cinemática Básica", top:["Velocidade Média","MRU e MRUV","Gráficos de Movimento"]}, 3: {m:"Química", t:"Ligações Químicas", top:["Regra do Octeto","Iônicas e Covalentes","Geometria Molecular"]}, 4: {m:"Biologia", t:"Organização Celular", top:["Células Procariontes/Eucariontes","Membranas","Organelas"]}, 5: {m:"Redação", t:"Estrutura e Tese", top:["Projeto de Texto","Introdução","Tese Clara"]} },
-        2: { 1: {m:"Português", t:"Barroco e Arcadismo", top:["Conceptismo vs Cultismo","Gregório de Matos","Bucolismo Árcade"]}, 2: {m:"Matemática", t:"Razão e Proporção", top:["Escalas","Grandezas Proporcionais","Regra de Três"]}, 3: {m:"Química", t:"Reações Químicas", top:["Balanceamento","Dupla Troca","Oxirredução"]}, 4: {m:"Biologia", t:"Química Celular", top:["Água e Sais","Carboidratos","Lipídios e Proteínas"]}, 5: {m:"Redação", t:"As 5 Competências", top:["Norma Culta (C1)","Repertório (C2)","Intervenção (C5)"]} },
-        3: { 1: {m:"Português", t:"Romantismo", top:["Nacionalismo (1ª Geração)","Subjetivismo (2ª Geração)","Condoreirismo (3ª Geração)"]}, 2: {m:"Física", t:"Cinemática II", top:["Movimento Circular (MCU)","Velocidade Angular","Frequência"]}, 3: {m:"Química", t:"Estequiometria", top:["Mol e Massa Molar","Pureza e Rendimento","Limitantes"]}, 4: {m:"Biologia", t:"DNA e RNA", top:["Duplicação do DNA","Transcrição/Tradução","Código Genético"]}, 5: {m:"Revisão", t:"Atualidades I", top:["Revisão Mensal","Exercícios TRI","Foco em Redação"]} },
-        4: { 1: {m:"Português", t:"Realismo e Naturalismo", top:["Ironia Machadiana","Cientificismo","Crítica à Burguesia"]}, 2: {m:"Matemática", t:"Porcentagem", top:["Juros Simples","Descontos Sucessivos","Interpretação de Gráficos"]}, 3: {m:"Química", t:"Inorgânica", top:["Ácidos e Bases","Sais e Óxidos","Escala de pH"]}, 4: {m:"Geografia", t:"Climatologia", top:["Massas de Ar","Tipos de Clima","El Niño/La Niña"]}, 5: {m:"Simulado", t:"Simulado Mensal I", top:["90 Questões","Treino de Tempo","Caderno de Erros"]} },
-        5: { 1: {m:"História", t:"Grécia e Roma", top:["Democracia Ateniense","República Romana","Império Romano"]}, 2: {m:"Física", t:"Leis de Newton", top:["Inércia e F=ma","Ação e Reação","Força de Atrito"]}, 3: {m:"Química", t:"Orgânica I", top:["Cadeias Carbônicas","Hidrocarbonetos","Hibridização"]}, 4: {m:"Biologia", t:"Divisão Celular", top:["Mitose","Meiose","Ciclo Celular"]}, 5: {m:"Redação", t:"Repertório", top:["Citações Coringas","Alusões Históricas","Filosofia"]} },
-        6: { 1: {m:"Geografia", t:"Domínios Morfoclimáticos", top:["Biogeografia","Questões Agrárias","Impactos Ambientais"]}, 2: {m:"Sociologia", t:"Filosofia Antiga", top:["Socráticos","Mito x Razão","Estoicismo"]}, 3: {m:"Química", t:"Termoquímica", top:["Entalpia","Lei de Hess","Reações Exotérmicas"]}, 4: {m:"História", t:"Feudalismo", top:["Vassalagem","Igreja Medieval","Crise do Século XIV"]}, 5: {m:"Revisão", t:"Atualidades II", top:["Geopolítica","Conflitos Atuais","Redação"]} },
-        7: { 1: {m:"Linguagens", t:"Funções da Linguagem", top:["Metalinguística","Fática e Poética","Figuras de Linguagem"]}, 2: {m:"Física", t:"Trabalho e Energia", top:["Energia Mecânica","Potência","Conservação de Energia"]}, 3: {m:"Química", t:"Radioatividade", top:["Emissões Alfa/Beta","Meia-vida","Fusão/Fissão"]}, 4: {m:"Biologia", t:"Metabolismo Plantas", top:["Fotossíntese","Respiração Celular","Ciclo do Carbono"]}, 5: {m:"Redação", t:"Coesão", top:["Conectivos","Operadores Argumentativos","Anáforas"]} },
-        8: { 1: {m:"Linguagens", t:"Gêneros Textuais", top:["Coesão Referencial","Tipologia Textual","Variação Linguística"]}, 2: {m:"Matemática", t:"Conjuntos Numéricos", top:["Naturais/Inteiros/Reais","Diagramas de Venn","Intervalos"]}, 3: {m:"Química", t:"Forças Intermoleculares", top:["Dipolo-dipolo","Pontes de Hidrogênio","Forças de London"]}, 4: {m:"Geografia", t:"Questões Ambientais", top:["Legislação Brasileira","Aquecimento Global","Conferências"]}, 5: {m:"Simulado", t:"Simulado Mensal II", top:["Foco em Linguagens","90 Questões","Redação"]} },
-        9: { 1: {m:"Linguagens", t:"Estratégias de Leitura", top:["Inferência Textual","Intertextualidade","Ponto de Vista"]}, 2: {m:"Física", t:"Eletrostática", top:["Cargas Elétricas","Lei de Coulomb","Campo Elétrico"]}, 3: {m:"Química", t:"Soluções", top:["Concentração Comum","Molaridade","Diluição"]}, 4: {m:"Biologia", t:"Ecologia I", top:["Cadeias Alimentares","Pirâmides Ecológicas","Ciclos Biogeoquímicos"]}, 5: {m:"Redação", t:"Desenvolvimento", top:["Argumentação Lógica","Causa e Consequência","Exemplificação"]} },
-        10: { 1: {m:"História", t:"Absolutismo", top:["Reformas Religiosas","Expansão Marítima","Brasil Colônia"]}, 2: {m:"Física", t:"Eletrostática II", top:["Potencial Elétrico","Trabalho da Força Elétrica","Superfícies Equipotenciais"]}, 3: {m:"Química", t:"Soluções II", top:["Mistura de Soluções","Titulação","Propriedades Coligativas"]}, 4: {m:"Biologia", t:"Ecologia II", top:["Relações Ecológicas","Dinâmica de Populações","Sucessão Ecológica"]}, 5: {m:"Revisão", t:"Revisão Geral", top:["Semanas 6 a 9","Questões Difíceis","Check-list"]} },
-        11: { 1: {m:"Geografia", t:"Geografia Agrária", top:["Estrutura Fundiária","Agronegócio","Conflitos de Terra"]}, 2: {m:"Filosofia", t:"Iluminismo", top:["Racionalismo","Empirismo","Contratualismo"]}, 3: {m:"Química", t:"Funções Orgânicas", top:["Álcoois/Fenóis","Aldeídos/Cetonas","Ácidos Carboxílicos"]}, 4: {m:"Biologia", t:"Poluição", top:["Eutrofização","Inversão Térmica","Chuva Ácida"]}, 5: {m:"Redação", t:"Intervenção", top:["Agente e Ação","Meio e Modo","Detalhamento"]} },
-        12: { 1: {m:"Linguagens", t:"Pré-Modernismo", top:["Euclides da Cunha","Monteiro Lobato","Lima Barreto"]}, 2: {m:"Física", t:"Eletrodinâmica", top:["Corrente Elétrica","Leis de Ohm","Resistores"]}, 3: {m:"Matemática", t:"Potenciação", top:["Radiciação","Notação Científica","Racionais"]}, 4: {m:"História", t:"Revolução Industrial", top:["Fases da Indústria","Impactos Sociais","Movimentos Operários"]}, 5: {m:"Simulado", t:"Simulado Trimestral", top:["Simulado Completo","Ranking Pessoal","TRI"]} },
-        13: { 1: {m:"Linguagens", t:"Modernismo I", top:["Semana de Arte Moderna","1ª Geração Modernista","Antropofagia"]}, 2: {m:"Matemática", t:"Escalas e Unidades", top:["Conversão de Medidas","Escalas Volumétricas","Áreas"]}, 3: {m:"Química", t:"Cinética Química", top:["Velocidade de Reação","Fatores de Influência","Energia de Ativação"]}, 4: {m:"Biologia", t:"Clima Global", top:["Efeito Estufa","Camada de Ozônio","Crise Hídrica"]}, 5: {m:"Redação", t:"Repertório II", top:["Sociólogos Brasileiros","Conceitos de Bauman","Foucault"]} },
-        14: { 1: {m:"História", t:"Revolução Francesa", top:["Iluminismo na prática","Era Napoleônica","Congresso de Viena"]}, 2: {m:"Física", t:"Eletrodinâmica II", top:["Circuitos em Série/Paralelo","Amperímetro/Voltímetro","Potência Elétrica"]}, 3: {m:"Química", t:"Isomeria", top:["Isomeria Plana","Isomeria Geométrica","Isomeria Óptica"]}, 4: {m:"Geografia", t:"Geopolítica", top:["Globalização","Blocos Econômicos","Nova Ordem Mundial"]}, 5: {m:"Redação", t:"Projeto Final", top:["Análise de Redações 1000","Prática de Tempo","Check"]} },
-        15: { 1: {m:"História", t:"Independências", top:["Independência do Brasil","América Espanhola","Primeiro Reinado"]}, 2: {m:"Filosofia", t:"Ética e Política", top:["Maquiavel","Kant (Imperativo)","Direito Natural"]}, 3: {m:"Química", t:"Equilíbrio Químico", top:["Constantes Kc e Kp","Princípio de Le Chatelier","pH e pOH"]}, 4: {m:"Matemática", t:"Função 1º Grau", top:["Gráficos e Tabelas","Coeficientes","Aplicações"]}, 5: {m:"Revisão", t:"Revisão Geral", top:["Semanas 11 a 14","Exercícios de Fixação","Redação"]} },
-        16: { 1: {m:"Linguagens", t:"Modernismo II", top:["Geração de 30","Drummond e Bandeira","Regionalismo Nordestino"]}, 2: {m:"Matemática", t:"Função 2º Grau", top:["Vértice da Parábola","Raízes (Bhaskara)","Máximos e Mínimos"]}, 3: {m:"Química", t:"Reações Orgânicas", top:["Substituição","Adição","Esterificação"]}, 4: {m:"Biologia", t:"Reinos da Vida", top:["Vírus e Bactérias","Fungos e Protozoários","Parasitoses"]}, 5: {m:"Simulado", t:"Simulado Semestral", top:["Meio do Ano","Avaliação de Metas","Estratégia TRI"]} },
-        // ... (O sistema gera o ciclo de aprofundamento e revisão final para as semanas 17 a 32)
+// ==================== CONFIGURAÇÃO SEGURA DE BIBLIOTECAS EXTERNAS ====================
+try {
+  if (window.pdfjsLib && window.pdfjsLib.GlobalWorkerOptions) {
+    window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+  }
+} catch (e) {
+  console.warn('PDF.js worker fallback:', e);
+}
+
+function showToast(message, isError) {
+  const el = document.getElementById('toastBanner');
+  if (!el) return;
+  el.textContent = message;
+  el.style.background = isError ? '#b71c1c' : '#1b5e20';
+  el.style.display = 'block';
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(function() {
+    el.style.display = 'none';
+  }, 3600);
+}
+
+// ==================== INDEXEDDB PARA ARQUIVOS (PDF / FOTOS) ====================
+const DB_NAME = 'CuidadoLLCLaciFilesDB';
+const STORE_NAME = 'examFiles';
+
+function openFilesDB() {
+  return new Promise(function(resolve, reject) {
+    if (!window.indexedDB) {
+      return reject(new Error('IndexedDB indisponível'));
+    }
+    const req = indexedDB.open(DB_NAME, 1);
+    req.onupgradeneeded = function(e) {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains(STORE_NAME)) {
+        db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+      }
     };
+    req.onsuccess = function() { resolve(req.result); };
+    req.onerror = function() { reject(req.error); };
+  });
+}
 
-    function render() {
-        const picker = document.getElementById('date-picker').value;
-        const dataRef = picker ? new Date(picker + 'T12:00:00') : new Date();
-        const diaSemana = dataRef.getDay(); 
-        
-        let sem = Math.ceil(dataRef.getDate() / 7) + (dataRef.getMonth() * 4);
-        sem = (sem > 32) ? 32 : (sem || 1);
+async function saveFileBlob(id, file) {
+  if (!file) return null;
+  try {
+    const db = await openFilesDB();
+    return await new Promise(function(resolve, reject) {
+      const tx = db.transaction(STORE_NAME, 'readwrite');
+      tx.objectStore(STORE_NAME).put({ id: id, name: file.name, type: file.type, blob: file });
+      tx.oncomplete = function() { resolve(id); };
+      tx.onerror = function() { reject(tx.error); };
+    });
+  } catch (err) {
+    console.warn('Erro ao salvar blob no IndexedDB:', err);
+    return null;
+  }
+}
 
-        document.getElementById('hoje-titulo').innerText = `${dataRef.toLocaleDateString('pt-BR', {weekday:'long'}).toUpperCase()} • SEMANA ${sem}`;
+async function openSavedFile(id) {
+  try {
+    const db = await openFilesDB();
+    const tx = db.transaction(STORE_NAME, 'readonly');
+    const req = tx.objectStore(STORE_NAME).get(id);
+    req.onsuccess = function() {
+      if (!req.result || !req.result.blob) {
+        showToast('Arquivo não encontrado neste aparelho.', true);
+        return;
+      }
+      const url = URL.createObjectURL(req.result.blob);
+      window.open(url, '_blank');
+    };
+  } catch (err) {
+    showToast('Não foi possível abrir o anexo.', true);
+  }
+}
 
-        const hojeDiv = document.getElementById('content-hoje');
-        const semanaData = db[sem] || db[16]; 
-        const info = semanaData[diaSemana];
+// ==================== ESTADO INICIAL & LINHA DE BASE REAL (03/11/2026) ====================
+const STORAGE_KEY = 'cuidado_llc_laci_v4';
+const defaultData = {
+  diary: [],
+  labs: [
+    {
+      id: 'lab_base_20261103',
+      date: '2026-11-03',
+      leuco: 29050,
+      linfo: 20045,
+      hb: 16.0,
+      plaq: 187,
+      ldh: 363.1,
+      b2m: 2.88,
+      note: 'Linha de base CEMIR + Imunofenotipagem DB Diagnósticos (CD5+, CD19+, CD20+, CD200+, Kappa+, CD34-, CD38-)',
+      fileId: null,
+      fileName: ''
+    }
+  ],
+  usg: [
+    {
+      id: 'usg_base_20261103',
+      date: '2026-11-03',
+      spleen: null,
+      axilla: null,
+      cervical: null,
+      liver: 'normal',
+      note: 'Esplenomegalia e linfonodomegalias axilares referidas na avaliação clínica inicial (inserir medidas em cm no próximo exame)',
+      fileId: null,
+      fileName: ''
+    }
+  ],
+  checks: {}
+};
 
-        if(diaSemana >= 1 && diaSemana <= 5 && info) {
-            hojeDiv.innerHTML = `
-                <div class="card highlight">
-                    <span class="tag">MISSÃO: ${info.m}</span>
-                    <h2 style="font-size:24px; margin-bottom:10px">${info.t}</h2>
-                    <div class="topic-list">
-                        ${info.top.map(t => `<div class="topic-item"><i class="fas fa-check-circle"></i> ${t}</div>`).join('')}
-                    </div>
-                </div>`;
-        } else if (diaSemana === 6) {
-            hojeDiv.innerHTML = `<div class="card" style="border-color:var(--success)"><span class="tag">SÁBADO</span><h2>Simulado & Estratégia</h2><p style="color:var(--dim); margin-top:10px">Ana, faça uma prova anterior e use a calculadora para medir sua evolução!</p></div>`;
-        } else {
-            hojeDiv.innerHTML = `<div class="card" style="text-align:center"><span class="tag">DOMINGO</span><h2>Recarregar ⚡</h2><p>Dia de descanso total para a mente.</p></div>`;
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return JSON.parse(JSON.stringify(defaultData));
+    const parsed = JSON.parse(raw);
+    if (!parsed.labs || !parsed.labs.length) parsed.labs = JSON.parse(JSON.stringify(defaultData.labs));
+    if (!parsed.usg || !parsed.usg.length) parsed.usg = JSON.parse(JSON.stringify(defaultData.usg));
+    if (!Array.isArray(parsed.diary)) parsed.diary = [];
+    if (!parsed.checks || typeof parsed.checks !== 'object') parsed.checks = {};
+    return parsed;
+  } catch (e) {
+    return JSON.parse(JSON.stringify(defaultData));
+  }
+}
+
+let appState = loadState();
+
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+  } catch (e) {
+    showToast('Aviso: memória cheia no navegador.', true);
+  }
+}
+
+// ==================== NAVEGAÇÃO ENTRE ABAS ====================
+function switchTab(tabId) {
+  document.querySelectorAll('.nav-tab').forEach(function(b) {
+    b.classList.toggle('active', b.getAttribute('data-tab') === tabId);
+  });
+  document.querySelectorAll('.tab-panel').forEach(function(p) {
+    p.classList.toggle('active', p.id === 'tab-' + tabId);
+  });
+  if (tabId === 'painel') renderDashboard();
+  if (tabId === 'exames') renderExamLists();
+  if (tabId === 'diario') renderDiaryRecent();
+}
+
+// ==================== ABA 1: DIÁRIO DO SOGRO ====================
+let currentEnergy = 'forte';
+let currentSymptoms = ['nenhum'];
+let currentActivities = [];
+let currentDrink = 'agua_coco';
+let lastUploadedFileForLab = null;
+let lastUploadedFileForUsg = null;
+
+function todayISO() {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().split('T')[0];
+}
+
+function yesterdayISO(refIso) {
+  const d = new Date(refIso + 'T12:00:00');
+  d.setDate(d.getDate() - 1);
+  return d.toISOString().split('T')[0];
+}
+
+function selectEnergy(val) {
+  currentEnergy = val;
+  document.querySelectorAll('[data-energy]').forEach(function(b) {
+    b.className = 'choice-btn';
+    if (b.getAttribute('data-energy') === val) {
+      if (val === 'forte') b.classList.add('selected-green');
+      if (val === 'cansado') b.classList.add('selected-warn');
+      if (val === 'fraco') b.classList.add('selected-danger');
+    }
+  });
+}
+
+function toggleSymptom(sym) {
+  if (sym === 'nenhum') {
+    currentSymptoms = ['nenhum'];
+  } else {
+    currentSymptoms = currentSymptoms.filter(function(s) { return s !== 'nenhum'; });
+    if (currentSymptoms.includes(sym)) {
+      currentSymptoms = currentSymptoms.filter(function(s) { return s !== sym; });
+    } else {
+      currentSymptoms.push(sym);
+    }
+    if (currentSymptoms.length === 0) currentSymptoms = ['nenhum'];
+  }
+
+  document.querySelectorAll('.symptom-chip').forEach(function(c) {
+    const cSym = c.getAttribute('data-sym');
+    c.className = 'symptom-chip';
+    if (currentSymptoms.includes(cSym)) {
+      c.classList.add(cSym === 'nenhum' ? 'active-ok' : 'active-alert');
+    }
+  });
+}
+
+function toggleActivity(act) {
+  if (currentActivities.includes(act)) {
+    currentActivities = currentActivities.filter(function(a) { return a !== act; });
+  } else {
+    currentActivities.push(act);
+  }
+
+  document.querySelectorAll('[data-act]').forEach(function(b) {
+    const bAct = b.getAttribute('data-act');
+    const isBlocked = b.getAttribute('data-blocked') === '1';
+    b.className = 'choice-btn';
+    if (currentActivities.includes(bAct)) {
+      b.classList.add(isBlocked ? 'selected-danger' : 'selected-green');
+    }
+  });
+
+  const hasBlocked = currentActivities.some(function(a) {
+    return ['pa_racao', 'chiqueiro', 'peso_gado'].includes(a);
+  });
+  document.getElementById('activityWarning').style.display = hasBlocked ? 'block' : 'none';
+}
+
+function isYesterday100Ok(dateStr) {
+  const yDate = yesterdayISO(dateStr);
+  const yRec = appState.diary.find(function(d) { return d.date === yDate; });
+  if (!yRec) return false;
+  const noAlertSym = yRec.symptoms.length === 1 && yRec.symptoms[0] === 'nenhum';
+  const noBlockedAct = !yRec.activities.some(function(a) {
+    return ['pa_racao', 'chiqueiro', 'peso_gado'].includes(a);
+  });
+  return yRec.energy === 'forte' && noAlertSym && noBlockedAct;
+}
+
+function atualizarTravaCerveja() {
+  const dStr = document.getElementById('diaryDate').value || todayISO();
+  const unlocked = isYesterday100Ok(dStr);
+  const btn = document.getElementById('btnCervejaZero');
+  const box = document.getElementById('cervejaStatusBox');
+  if (unlocked) {
+    btn.classList.remove('locked');
+    box.className = 'alert-box alert-green';
+    box.innerHTML = '✅ <b>Cerveja 0,0% liberada hoje!</b> Como ontem esteve 100% tudo certo, está autorizada 1 lata (350ml) 0,0% álcool no fim da tarde.';
+  } else {
+    btn.classList.add('locked');
+    if (currentDrink === 'cerveja_zero') {
+      selectDrink('agua_coco');
+    }
+    box.className = 'alert-box alert-warn';
+    box.innerHTML = '🔒 <b>Cerveja 0,0% bloqueada hoje:</b> Só libera no fim da tarde quando o registro de <b>ontem</b> estiver 100% tudo certo (energia forte, sem sintomas e sem serviço pesado).';
+  }
+}
+
+function selectDrink(val) {
+  const dStr = document.getElementById('diaryDate').value || todayISO();
+  if (val === 'cerveja_zero' && !isYesterday100Ok(dStr)) {
+    showToast('🔒 A Cerveja 0,0% só libera quando ONTEM estiver 100% OK.', true);
+    return;
+  }
+  currentDrink = val;
+  document.querySelectorAll('[data-drink]').forEach(function(b) {
+    const bVal = b.getAttribute('data-drink');
+    const isLocked = b.id === 'btnCervejaZero' && !isYesterday100Ok(dStr);
+    b.className = isLocked ? 'choice-btn locked' : 'choice-btn';
+    if (bVal === val) b.classList.add('selected-green');
+  });
+}
+
+function simularOntemOk() {
+  const dStr = document.getElementById('diaryDate').value || todayISO();
+  const yDate = yesterdayISO(dStr);
+  appState.diary = appState.diary.filter(function(d) { return d.date !== yDate; });
+  appState.diary.push({
+    date: yDate,
+    energy: 'forte',
+    symptoms: ['nenhum'],
+    activities: ['supervisao'],
+    drink: 'agua_coco',
+    note: 'Dia 100% tranquilo (simulação de teste)'
+  });
+  appState.diary.sort(function(a, b) { return a.date.localeCompare(b.date); });
+  saveState();
+  atualizarTravaCerveja();
+  renderDiaryRecent();
+  showToast('🧪 Ontem simulado como 100% OK! Cerveja 0,0% desbloqueada hoje.');
+}
+
+function resetarHoje() {
+  selectEnergy('forte');
+  toggleSymptom('nenhum');
+  currentActivities = [];
+  document.querySelectorAll('[data-act]').forEach(function(b) { b.className = 'choice-btn'; });
+  document.getElementById('activityWarning').style.display = 'none';
+  selectDrink('agua_coco');
+  document.getElementById('diaryNote').value = '';
+  document.getElementById('saveFeedback').style.display = 'none';
+  showToast('Formulário de hoje limpo.');
+}
+
+function salvarDiario() {
+  const date = document.getElementById('diaryDate').value || todayISO();
+  const note = document.getElementById('diaryNote').value.trim();
+  appState.diary = appState.diary.filter(function(d) { return d.date !== date; });
+  appState.diary.push({
+    date: date,
+    energy: currentEnergy,
+    symptoms: currentSymptoms.slice(),
+    activities: currentActivities.slice(),
+    drink: currentDrink,
+    note: note
+  });
+  appState.diary.sort(function(a, b) { return a.date.localeCompare(b.date); });
+  saveState();
+  atualizarTravaCerveja();
+  renderDiaryRecent();
+
+  const fb = document.getElementById('saveFeedback');
+  fb.style.display = 'block';
+  fb.innerHTML = '✅ Registro de <b>' + formatDateBR(date) + '</b> salvo com sucesso na memória do aparelho!';
+  showToast('✅ Registro diário salvo!');
+}
+
+function renderDiaryRecent() {
+  const box = document.getElementById('diaryRecentList');
+  if (!box) return;
+  if (!appState.diary.length) {
+    box.innerHTML = '<p style="font-size:0.86rem; color:var(--muted); margin:0;">Nenhum registro diário salvo ainda. Preencha acima e toque em Salvar.</p>';
+    return;
+  }
+  const eLabels = { forte: '💪 Forte', cansado: '😐 Meio cansado', fraco: '🪫 Muito fraco' };
+  const sLabels = {
+    nenhum: 'Sem sintomas', febre: 'Febre', suor: 'Suor noturno',
+    barriga: 'Dor/peso baço', inguas: 'Ínguas maiores', roxo: 'Mancha roxa', tosse: 'Tosse/Infecção'
+  };
+  box.innerHTML = appState.diary.slice().reverse().slice(0, 7).map(function(d) {
+    const syms = d.symptoms.map(function(s) { return sLabels[s] || s; }).join(', ');
+    const hasBlocked = d.activities.some(function(a) { return ['pa_racao', 'chiqueiro', 'peso_gado'].includes(a); });
+    return '<div class="exam-item">' +
+      '<div style="display:flex; justify-content:space-between; align-items:center;">' +
+        '<strong>📅 ' + formatDateBR(d.date) + ' — ' + (eLabels[d.energy] || d.energy) + '</strong>' +
+        '<button type="button" data-del-diary="' + d.date + '" style="border:none; background:none; color:#b71c1c; font-weight:800; cursor:pointer;">✕</button>' +
+      '</div>' +
+      '<div style="font-size:0.84rem; margin-top:4px;">Sinais: <b>' + syms + '</b>' + (hasBlocked ? ' • <span style="color:#b71c1c; font-weight:700;">⚠️ Teve esforço bloqueado</span>' : '') + '</div>' +
+      (d.note ? '<div style="font-size:0.78rem; color:var(--muted); margin-top:3px;">' + escapeHtml(d.note) + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
+// ==================== ABA 2: IA LOCAL DE LEITURA DE PDF E IMAGEM ====================
+async function processarArquivoComIA(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const wrap = document.getElementById('aiProgressWrap');
+  const bar = document.getElementById('aiProgressBar');
+  const status = document.getElementById('aiStatusText');
+  wrap.style.display = 'block';
+  bar.style.width = '15%';
+  status.textContent = '⏳ Lendo arquivo localmente no aparelho...';
+
+  try {
+    let extractedText = '';
+    if (file.type === 'application/pdf' || file.name.toLowerCase().endsWith('.pdf')) {
+      if (!window.pdfjsLib) {
+        throw new Error('Biblioteca PDF.js indisponível offline. Cole o texto abaixo ou preencha os campos.');
+      }
+      status.textContent = '📄 Extraindo texto das páginas do PDF...';
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await window.pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      for (let i = 1; i <= pdf.numPages; i++) {
+        bar.style.width = (15 + Math.round((i / pdf.numPages) * 65)) + '%';
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        extractedText += '\n' + content.items.map(function(it) { return it.str; }).join(' ');
+      }
+      if (extractedText.replace(/\s+/g, '').length < 40 && window.Tesseract) {
+        status.textContent = '🔍 PDF escaneado detectado. Rodando OCR na primeira página...';
+        const page = await pdf.getPage(1);
+        const viewport = page.getViewport({ scale: 2.0 });
+        const canvas = document.createElement('canvas');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+        await page.render({ canvasContext: canvas.getContext('2d'), viewport: viewport }).promise;
+        const ocrRes = await window.Tesseract.recognize(canvas, 'por', {
+          logger: function(m) {
+            if (m.progress) bar.style.width = (30 + Math.round(m.progress * 60)) + '%';
+          }
+        });
+        extractedText = ocrRes.data.text;
+      }
+    } else if (file.type.startsWith('image/')) {
+      if (!window.Tesseract) {
+        throw new Error('OCR indisponível offline. Digite os valores nos campos abaixo.');
+      }
+      status.textContent = '📸 Rodando reconhecimento óptico (OCR) na imagem do exame...';
+      const ocrRes = await window.Tesseract.recognize(file, 'por', {
+        logger: function(m) {
+          if (m.status === 'recognizing text') {
+            bar.style.width = (20 + Math.round(m.progress * 70)) + '%';
+            status.textContent = '📸 Lendo texto da foto: ' + Math.round(m.progress * 100) + '%';
+          }
         }
+      });
+      extractedText = ocrRes.data.text;
+    }
 
-        const agendaLista = document.getElementById('lista-agenda');
-        agendaLista.innerHTML = "";
-        for(let s = 1; s <= 32; s++) {
-            const sData = db[s] || db[16];
-            let sHtml = `<div style="margin:20px 0 10px 5px; font-weight:900; color:var(--accent); font-size:11px">SEMANA ${s}</div>`;
-            for(let d = 1; d <= 5; d++) {
-                const item = sData[d];
-                sHtml += `<div class="card ${s==sem&&d==diaSemana?'highlight':''}" style="padding:15px; margin-bottom:8px; font-size:13px"><b>D${d}: ${item.m}</b> • ${item.t}</div>`;
+    bar.style.width = '100%';
+    status.textContent = '✅ Leitura concluída! Dados interpretados abaixo.';
+    document.getElementById('rawPasteText').value = extractedText.trim();
+    aplicarParserClinico(extractedText, file);
+  } catch (err) {
+    console.error(err);
+    status.textContent = '⚠️ ' + (err.message || 'Não foi possível ler automaticamente este arquivo. Preencha os valores nos campos abaixo.');
+  }
+}
+
+function interpretarTextoColado() {
+  const txt = document.getElementById('rawPasteText').value;
+  if (!txt.trim()) {
+    showToast('Cole o texto do exame primeiro ou selecione um arquivo.', true);
+    return;
+  }
+  aplicarParserClinico(txt, null);
+}
+
+function parseBrNumber(str) {
+  if (!str) return null;
+  let clean = str.replace(/\s/g, '');
+  if (/^\d{1,3}(\.\d{3})+(,\d+)?$/.test(clean)) {
+    clean = clean.replace(/\./g, '').replace(',', '.');
+  } else {
+    clean = clean.replace(',', '.');
+  }
+  const n = parseFloat(clean);
+  return isNaN(n) ? null : n;
+}
+
+function aplicarParserClinico(text, fileObj) {
+  const resBox = document.getElementById('aiExtractionResult');
+  resBox.style.display = 'block';
+
+  // 1. Detectar Data (DD/MM/AAAA)
+  let detectedDate = null;
+  const coletaMatch = text.match(/(?:Data\s*(?:da)?\s*Coleta|Data\s*do\s*Exame|Dt\.\s*Cadastro|Realizado\s*em)[:\s]*(\d{2})\/(\d{2})\/(\d{4})/i);
+  const anyDateMatch = text.match(/(\d{2})\/(\d{2})\/(202\d)/);
+  const mDate = coletaMatch || anyDateMatch;
+  if (mDate) detectedDate = mDate[3] + '-' + mDate[2] + '-' + mDate[1];
+
+  // 2. Detectar se é Ultrassom ou Hemograma
+  const isUsg = /ultrassonografia|ultrassom|esplenomegalia|ba[cç]o|linfonodo|axilar|cervical|par[eê]nquima\s*hep[aá]tico/i.test(text) &&
+                !/hemograma|leuc[oó]citos|hemoglobina/i.test(text);
+
+  if (isUsg) {
+    lastUploadedFileForUsg = fileObj || null;
+    if (detectedDate) document.getElementById('usgDate').value = detectedDate;
+
+    const spleenMatch = text.match(/ba[cç]o[^\r\n.]{0,60}?(\d{1,2}[,\.]\d)\s*cm/i);
+    const axillaMatch = text.match(/axilar(?:es)?[^\r\n.]{0,60}?(\d{1,2}[,\.]\d)\s*cm/i);
+    const cervMatch = text.match(/cervica(?:l|is)[^\r\n.]{0,60}?(\d{1,2}[,\.]\d)\s*cm/i);
+
+    const foundSummary = [];
+    if (spleenMatch) {
+      const v = parseBrNumber(spleenMatch[1]);
+      document.getElementById('usgSpleen').value = v;
+      foundSummary.push('Baço: <b>' + v + ' cm</b>');
+    }
+    if (axillaMatch) {
+      const v = parseBrNumber(axillaMatch[1]);
+      document.getElementById('usgAxilla').value = v;
+      foundSummary.push('Linfonodo Axilar: <b>' + v + ' cm</b>');
+    }
+    if (cervMatch) {
+      const v = parseBrNumber(cervMatch[1]);
+      document.getElementById('usgCervical').value = v;
+      foundSummary.push('Linfonodo Cervical: <b>' + v + ' cm</b>');
+    }
+    if (/hepatomegalia/i.test(text)) document.getElementById('usgLiver').value = 'hepatomegalia';
+    else if (/esteatose/i.test(text)) document.getElementById('usgLiver').value = 'esteatose';
+
+    document.getElementById('usgNote').value = text.replace(/\s+/g, ' ').slice(0, 140) + '...';
+    resBox.innerHTML = '🖥️ <b>Laudo de Ultrassom identificado!</b> ' +
+      (detectedDate ? 'Data: <b>' + formatDateBR(detectedDate) + '</b>.' : '') + '<br>' +
+      (foundSummary.length ? 'Medidas extraídas: ' + foundSummary.join(' • ') + '.' : 'Confira e complete as medidas em cm no formulário de Ultrassom abaixo.') +
+      '<br><i>Confira os campos preenchidos abaixo e clique em "Salvar Ultrassom no Histórico".</i>';
+  } else {
+    lastUploadedFileForLab = fileObj || null;
+    if (detectedDate) document.getElementById('labDate').value = detectedDate;
+
+    const leucoMatch = text.match(/LEUC[OÓ]CITOS[^\d]{0,25}(\d{1,3}(?:\.\d{3})+|\d{4,6})/i);
+    const linfoMatch = text.match(/LINF[OÓ]CITOS(?:\s*T[IÍ]PICOS)?[^\d]{0,30}\d{1,2}[,\.]\d\s+(\d{1,3}(?:\.\d{3})+|\d{4,6})/i) ||
+                       text.match(/LINF[OÓ]CITOS(?:\s*T[IÍ]PICOS)?[^\d]{0,25}(\d{4,6})/i);
+    const hbMatch = text.match(/HEMOGLOBINA[^\d]{0,25}(\d{1,2}[,\.]\d{1,2})/i);
+    const plaqMatch = text.match(/PLAQUETAS[^\d]{0,25}(\d{2,3})\s*(?:mil|x10)/i) || text.match(/PLAQUETAS[^\d]{0,25}(\d{2,3})/i);
+    const ldhMatch = text.match(/(?:LDH|LACTATO\s*DESIDROGENASE)[^\d]{0,25}(\d{2,4}[,\.]\d)/i);
+    const b2mMatch = text.match(/BETA[\s-]*2[\s-]*MICROGLOBULINA[^\d]{0,30}(\d{1,2}[,\.]\d{1,2})/i);
+
+    const found = [];
+    if (leucoMatch) {
+      const v = parseBrNumber(leucoMatch[1]);
+      document.getElementById('labLeuco').value = Math.round(v);
+      found.push('Leucócitos: <b>' + Math.round(v).toLocaleString('pt-BR') + '/mm³</b>');
+    }
+    if (linfoMatch) {
+      const v = parseBrNumber(linfoMatch[1]);
+      document.getElementById('labLinfo').value = Math.round(v);
+      found.push('Linfócitos: <b>' + Math.round(v).toLocaleString('pt-BR') + '/mm³</b>');
+    }
+    if (hbMatch) {
+      const v = parseBrNumber(hbMatch[1]);
+      document.getElementById('labHb').value = v;
+      found.push('Hemoglobina: <b>' + v + ' g/dL</b>');
+    }
+    if (plaqMatch) {
+      let v = parseBrNumber(plaqMatch[1]);
+      if (v > 1000) v = Math.round(v / 1000);
+      document.getElementById('labPlaq').value = v;
+      found.push('Plaquetas: <b>' + v + ' mil/mm³</b>');
+    }
+    if (ldhMatch) {
+      const v = parseBrNumber(ldhMatch[1]);
+      document.getElementById('labLdh').value = v;
+      found.push('LDH: <b>' + v + ' U/L</b>');
+    }
+    if (b2mMatch) {
+      const v = parseBrNumber(b2mMatch[1]);
+      document.getElementById('labB2m').value = v;
+      found.push('Beta-2M: <b>' + v + ' mg/L</b>');
+    }
+
+    resBox.innerHTML = '🩸 <b>Exame Laboratorial identificado!</b> ' +
+      (detectedDate ? 'Data: <b>' + formatDateBR(detectedDate) + '</b>.' : '') + '<br>' +
+      (found.length ? 'Valores extraídos: ' + found.join(' • ') + '.' : 'Confira e complete os valores nos campos abaixo.') +
+      '<br><i>Revise os números preenchidos no formulário abaixo e clique em "Salvar Hemograma no Histórico".</i>';
+  }
+}
+
+async function salvarHemograma() {
+  const date = document.getElementById('labDate').value;
+  const linfo = parseFloat(document.getElementById('labLinfo').value);
+  const hb = parseFloat(document.getElementById('labHb').value);
+  const plaq = parseFloat(document.getElementById('labPlaq').value);
+  if (!date || isNaN(linfo) || isNaN(hb) || isNaN(plaq)) {
+    showToast('Preencha Data, Linfócitos Absolutos, Hemoglobina e Plaquetas.', true);
+    return;
+  }
+  const leuco = parseFloat(document.getElementById('labLeuco').value) || null;
+  const ldh = parseFloat(document.getElementById('labLdh').value) || null;
+  const b2m = parseFloat(document.getElementById('labB2m').value) || null;
+  const note = document.getElementById('labNote').value.trim();
+
+  const manualFile = document.getElementById('labFileManual').files[0];
+  const fileToStore = manualFile || lastUploadedFileForLab;
+  let fileId = null;
+  let fileName = '';
+  if (fileToStore) {
+    fileId = 'file_lab_' + Date.now();
+    fileName = fileToStore.name;
+    await saveFileBlob(fileId, fileToStore);
+    lastUploadedFileForLab = null;
+  }
+
+  appState.labs.push({
+    id: 'lab_' + Date.now(),
+    date: date,
+    leuco: leuco,
+    linfo: linfo,
+    hb: hb,
+    plaq: plaq,
+    ldh: ldh,
+    b2m: b2m,
+    note: note,
+    fileId: fileId,
+    fileName: fileName
+  });
+  appState.labs.sort(function(a, b) { return a.date.localeCompare(b.date); });
+  saveState();
+  renderExamLists();
+  showToast('✅ Hemograma salvo e estadiamento atualizado!');
+}
+
+async function salvarUltrassom() {
+  const date = document.getElementById('usgDate').value;
+  if (!date) {
+    showToast('Informe a data do ultrassom.', true);
+    return;
+  }
+  const spleen = parseFloat(document.getElementById('usgSpleen').value) || null;
+  const axilla = parseFloat(document.getElementById('usgAxilla').value) || null;
+  const cervical = parseFloat(document.getElementById('usgCervical').value) || null;
+  const liver = document.getElementById('usgLiver').value;
+  const note = document.getElementById('usgNote').value.trim();
+
+  const manualFile = document.getElementById('usgFileManual').files[0];
+  const fileToStore = manualFile || lastUploadedFileForUsg;
+  let fileId = null;
+  let fileName = '';
+  if (fileToStore) {
+    fileId = 'file_usg_' + Date.now();
+    fileName = fileToStore.name;
+    await saveFileBlob(fileId, fileToStore);
+    lastUploadedFileForUsg = null;
+  }
+
+  appState.usg.push({
+    id: 'usg_' + Date.now(),
+    date: date,
+    spleen: spleen,
+    axilla: axilla,
+    cervical: cervical,
+    liver: liver,
+    note: note,
+    fileId: fileId,
+    fileName: fileName
+  });
+  appState.usg.sort(function(a, b) { return a.date.localeCompare(b.date); });
+  saveState();
+  renderExamLists();
+  showToast('✅ Ultrassom salvo no histórico!');
+}
+
+function renderExamLists() {
+  const labDiv = document.getElementById('labHistoryList');
+  labDiv.innerHTML = appState.labs.slice().reverse().map(function(l, idx, arr) {
+    const prev = arr[idx + 1];
+    let diffBadge = '';
+    if (prev && prev.linfo) {
+      const pct = (((l.linfo - prev.linfo) / prev.linfo) * 100).toFixed(1);
+      const cls = parseFloat(pct) >= 50 ? 'badge-danger' : (parseFloat(pct) > 15 ? 'badge-warn' : 'badge-green');
+      diffBadge = '<span class="badge ' + cls + '">' + (parseFloat(pct) >= 0 ? '+' : '') + pct + '% linfócitos</span>';
+    }
+    return '<div class="exam-item">' +
+      '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">' +
+        '<strong>📅 ' + formatDateBR(l.date) + '</strong>' +
+        '<div>' +
+          diffBadge + ' ' +
+          (l.fileId ? '<button type="button" class="btn-secondary" data-open-file="' + l.fileId + '" style="padding:3px 8px; font-size:0.75rem;">📎 Ver Anexo</button> ' : '') +
+          (l.id !== 'lab_base_20261103' ? '<button type="button" data-del-lab="' + l.id + '" style="border:none; background:none; color:#b71c1c; cursor:pointer; font-weight:700;">✕</button>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div style="font-size:0.86rem; margin-top:6px;">' +
+        'Leuco: <b>' + (l.leuco ? l.leuco.toLocaleString('pt-BR') : '—') + '</b> | ' +
+        'Linfócitos: <b>' + l.linfo.toLocaleString('pt-BR') + '/mm³</b> | ' +
+        'Hb: <b>' + l.hb + ' g/dL</b> | ' +
+        'Plaq: <b>' + l.plaq + ' mil</b>' +
+        (l.ldh ? ' | LDH: <b>' + l.ldh + '</b>' : '') +
+        (l.b2m ? ' | B2M: <b>' + l.b2m + '</b>' : '') +
+      '</div>' +
+      (l.note ? '<div style="font-size:0.78rem; color:var(--muted); margin-top:4px;">' + escapeHtml(l.note) + '</div>' : '') +
+    '</div>';
+  }).join('');
+
+  const usgDiv = document.getElementById('usgHistoryList');
+  usgDiv.innerHTML = appState.usg.slice().reverse().map(function(u, idx, arr) {
+    const prev = arr[idx + 1];
+    let spleenDelta = '';
+    if (prev && prev.spleen && u.spleen) {
+      const d = (u.spleen - prev.spleen).toFixed(1);
+      spleenDelta = '<span class="badge ' + (parseFloat(d) > 1.5 ? 'badge-warn' : 'badge-blue') + '">Baço ' + (parseFloat(d) >= 0 ? '+' : '') + d + ' cm</span>';
+    }
+    return '<div class="exam-item">' +
+      '<div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:4px;">' +
+        '<strong>📅 ' + formatDateBR(u.date) + '</strong>' +
+        '<div>' +
+          spleenDelta + ' ' +
+          (u.fileId ? '<button type="button" class="btn-secondary" data-open-file="' + u.fileId + '" style="padding:3px 8px; font-size:0.75rem;">📎 Ver Laudo</button> ' : '') +
+          (u.id !== 'usg_base_20261103' ? '<button type="button" data-del-usg="' + u.id + '" style="border:none; background:none; color:#b71c1c; cursor:pointer; font-weight:700;">✕</button>' : '') +
+        '</div>' +
+      '</div>' +
+      '<div style="font-size:0.86rem; margin-top:6px;">' +
+        'Baço: <b>' + (u.spleen ? u.spleen + ' cm' : 'Esplenomegalia (s/ medida)') + '</b> | ' +
+        'Axilar: <b>' + (u.axilla ? u.axilla + ' cm' : '—') + '</b> | ' +
+        'Cervical: <b>' + (u.cervical ? u.cervical + ' cm' : '—') + '</b>' +
+      '</div>' +
+      (u.note ? '<div style="font-size:0.78rem; color:var(--muted); margin-top:4px;">' + escapeHtml(u.note) + '</div>' : '') +
+    '</div>';
+  }).join('');
+}
+
+// ==================== ABA 3: CÁLCULO DE ESTADIAMENTO & PAINEL ====================
+function calcularEstadiamentoAtual() {
+  const labs = appState.labs;
+  const lastLab = labs[labs.length - 1];
+  const prevLab = labs.length > 1 ? labs[labs.length - 2] : null;
+  const lastUsg = appState.usg[appState.usg.length - 1];
+
+  let rai = 'Rai II (Risco Intermediário)';
+  let binet = 'Binet B';
+  let statusColor = 'green';
+  let conduta = 'Vigilância Ativa ("Watch & Wait") — Sem critérios de início imediato de quimio/terapia-alvo.';
+
+  if (lastLab.hb < 11.0 || lastLab.plaq < 100) {
+    rai = lastLab.plaq < 100 ? 'Rai IV (Alto Risco)' : 'Rai III (Alto Risco)';
+    binet = 'Binet C';
+    statusColor = 'danger';
+    conduta = 'ALERTA: Anemia (Hb < 11) ou Plaquetopenia (< 100 mil) detectada — avaliar início de tratamento específico com hematologista.';
+  }
+
+  let lymphGrowthPct = null;
+  if (prevLab && prevLab.linfo > 0) {
+    lymphGrowthPct = ((lastLab.linfo - prevLab.linfo) / prevLab.linfo) * 100;
+    if (lymphGrowthPct >= 50) {
+      statusColor = 'danger';
+      conduta = 'ALERTA iwCLL: Linfócitos subiram +' + lymphGrowthPct.toFixed(1) + '% em relação ao exame anterior (critério de linfocitose progressiva ≥ 50%). Antecipar retorno hematológico.';
+    }
+  }
+
+  const last7 = appState.diary.slice(-7);
+  const redSymptoms = [];
+  last7.forEach(function(d) {
+    d.symptoms.forEach(function(s) {
+      if (s !== 'nenhum' && !redSymptoms.includes(s)) redSymptoms.push(s);
+    });
+    if (d.energy === 'fraco' && !redSymptoms.includes('fadiga_forte')) redSymptoms.push('fadiga_forte');
+  });
+
+  if (redSymptoms.length > 0 && statusColor !== 'danger') {
+    statusColor = 'warn';
+    conduta = 'ATENÇÃO CLÍNICA: Houve registro de sintomas no diário nos últimos 7 dias. Investigar infecção ou atividade de doença com o médico.';
+  }
+
+  return { lastLab: lastLab, prevLab: prevLab, lastUsg: lastUsg, rai: rai, binet: binet, statusColor: statusColor, conduta: conduta, lymphGrowthPct: lymphGrowthPct, last7: last7, redSymptoms: redSymptoms };
+}
+
+let lymphChartInstance = null;
+let energyChartInstance = null;
+
+function renderDashboard() {
+  const st = calcularEstadiamentoAtual();
+  const banner = document.getElementById('stagingBanner');
+  banner.className = 'alert-box alert-' + st.statusColor;
+  banner.innerHTML =
+    '<div style="font-size:1rem; font-weight:800; margin-bottom:4px;">Estadiamento Atual: ' + st.rai + ' • ' + st.binet + '</div>' +
+    '<div>' + st.conduta + '</div>';
+
+  const symMap = {
+    febre: 'Febre/Calafrio', suor: 'Suor noturno', barriga: 'Dor/Peso baço',
+    inguas: 'Ínguas maiores', roxo: 'Mancha roxa/Sangramento', tosse: 'Tosse/Infecção', fadiga_forte: 'Fraqueza forte'
+  };
+  const estadoGeralTxt = st.redSymptoms.length === 0
+    ? (st.last7.length ? 'Assintomático (100% bem)' : 'Assintomático (aguardando diário)')
+    : st.redSymptoms.map(function(s) { return symMap[s] || s; }).join(', ');
+
+  document.getElementById('clinicalKpis').innerHTML =
+    '<div class="mini-stat">' +
+      '<div class="val">' + (st.lastLab.linfo / 1000).toFixed(1) + 'k</div>' +
+      '<div class="lbl">Linfócitos (/mm³)</div>' +
+    '</div>' +
+    '<div class="mini-stat">' +
+      '<div class="val">' + st.lastLab.hb + ' g/dL</div>' +
+      '<div class="lbl">Hemoglobina</div>' +
+    '</div>' +
+    '<div class="mini-stat">' +
+      '<div class="val">' + st.lastLab.plaq + ' mil</div>' +
+      '<div class="lbl">Plaquetas</div>' +
+    '</div>' +
+    '<div class="mini-stat">' +
+      '<div class="val" style="font-size:0.88rem;">' + estadoGeralTxt + '</div>' +
+      '<div class="lbl">Estado Geral (7d)</div>' +
+    '</div>';
+
+  // Gráficos com fallback caso Chart.js esteja offline
+  if (window.Chart) {
+    try {
+      const ctx1 = document.getElementById('lymphChart').getContext('2d');
+      if (lymphChartInstance) lymphChartInstance.destroy();
+      const labelsLab = appState.labs.map(function(l) { return formatDateBR(l.date); });
+      const dataLinfo = appState.labs.map(function(l) { return +(l.linfo / 1000).toFixed(2); });
+      const baseLimit = +(appState.labs[0].linfo * 1.5 / 1000).toFixed(2);
+      lymphChartInstance = new window.Chart(ctx1, {
+        type: 'line',
+        data: {
+          labels: labelsLab,
+          datasets: [
+            {
+              label: 'Linfócitos (mil/mm³)',
+              data: dataLinfo,
+              borderColor: '#0d47a1',
+              backgroundColor: 'rgba(13,71,161,0.14)',
+              borderWidth: 3,
+              pointRadius: 6,
+              fill: true,
+              tension: 0.25
+            },
+            {
+              label: 'Limite +50% (Critério iwCLL)',
+              data: labelsLab.map(function() { return baseLimit; }),
+              borderColor: '#b71c1c',
+              borderDash: [6, 6],
+              borderWidth: 2,
+              pointRadius: 0
             }
-            agendaLista.innerHTML += sHtml;
+          ]
+        },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true } } }
+      });
+
+      const ctx2 = document.getElementById('energyChart').getContext('2d');
+      if (energyChartInstance) energyChartInstance.destroy();
+      const last14 = appState.diary.slice(-14);
+      const labelsD = last14.length ? last14.map(function(d) { return d.date.slice(5).split('-').reverse().join('/'); }) : ['Sem registros'];
+      const valsD = last14.length ? last14.map(function(d) { return d.energy === 'forte' ? 3 : (d.energy === 'cansado' ? 2 : 1); }) : [3];
+      const colorsD = last14.length ? last14.map(function(d) { return d.energy === 'forte' ? '#2e7d32' : (d.energy === 'cansado' ? '#ef6c00' : '#c62828'); }) : ['#2e7d32'];
+      energyChartInstance = new window.Chart(ctx2, {
+        type: 'bar',
+        data: {
+          labels: labelsD,
+          datasets: [{
+            label: 'Energia (3=Forte, 2=Cansado, 1=Fraco)',
+            data: valsD,
+            backgroundColor: colorsD,
+            borderRadius: 8
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              min: 0,
+              max: 3.5,
+              ticks: {
+                stepSize: 1,
+                callback: function(v) { return v === 3 ? 'Forte' : v === 2 ? 'Cansado' : v === 1 ? 'Fraco' : ''; }
+              }
+            }
+          }
         }
+      });
+    } catch (chartErr) {
+      console.warn('Erro ao desenhar gráficos:', chartErr);
     }
+  } else {
+    document.getElementById('lymphChartContainer').innerHTML = '<div class="alert-box alert-info">Gráfico offline: Linfócitos atuais em <b>' + st.lastLab.linfo.toLocaleString('pt-BR') + '/mm³</b> (Alerta +50% acima de ' + Math.round(appState.labs[0].linfo * 1.5).toLocaleString('pt-BR') + '/mm³).</div>';
+    document.getElementById('energyChartContainer').innerHTML = '<div class="alert-box alert-info">Total de dias registrados no diário: <b>' + appState.diary.length + ' dia(s)</b>.</div>';
+  }
+}
 
-    // Pomodoro Pro
-    let pSec; let pInt; let pRunning = false;
-    function togglePomo() {
-        const btn = document.getElementById('pomo-btn');
-        if(!pRunning) {
-            pSec = pSec || document.getElementById('foco-in').value * 60;
-            pRunning = true; btn.innerText = "PAUSAR";
-            pInt = setInterval(() => {
-                pSec--;
-                const m = Math.floor(pSec/60); const s = pSec%60;
-                document.getElementById('timer').innerText = `${m}:${s < 10 ? '0' : ''}${s}`;
-                if(pSec <= 0) { clearInterval(pInt); alarme(); pRunning=false; btn.innerText="RECOMEÇAR"; pSec=null; }
-            }, 1000);
-        } else { clearInterval(pInt); pRunning = false; btn.innerText = "CONTINUAR"; }
-    }
-    function alarme() {
-        const ctx = new AudioContext(); const osc = ctx.createOscillator();
-        osc.connect(ctx.destination); osc.start(); osc.stop(ctx.currentTime + 2);
-    }
+function copiarResumoWhatsApp() {
+  const st = calcularEstadiamentoAtual();
+  const symMap = {
+    febre: 'Febre/Calafrio', suor: 'Suor noturno', barriga: 'Dor/Peso lado esquerdo (baço)',
+    inguas: 'Ínguas maiores', roxo: 'Mancha roxa/Sangramento', tosse: 'Tosse/Infecção', fadiga_forte: 'Fraqueza forte'
+  };
+  const estadoGeral = st.redSymptoms.length === 0
+    ? 'Bom estado geral, assintomático (sem febre, sem suor noturno e boa disposição)'
+    : 'Atenção — apresentou: ' + st.redSymptoms.map(function(s) { return symMap[s] || s; }).join(', ');
 
-    function calc() {
-        const m = Number(document.getElementById('m-ac').value);
-        const n = Number(document.getElementById('n-ac').value);
-        const nota = ((m*20) + (n*18) + 420).toFixed(0);
-        document.getElementById('res-calc').innerHTML = `Média: <span style="color:var(--accent)">${nota}</span>`;
-        confetti({particleCount:150, spread:70, origin:{y:0.8}, colors:['#bf5af2','#fff']});
-    }
+  const varTxt = st.lymphGrowthPct !== null
+    ? (st.lymphGrowthPct >= 0 ? '+' : '') + st.lymphGrowthPct.toFixed(1) + '% vs exame anterior'
+    : 'Linha de base inicial';
 
-    function nav(id, btn) {
-        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
-        btn.classList.add('on');
+  const usgTxt = st.lastUsg
+    ? 'Data ' + formatDateBR(st.lastUsg.date) + ' | Baço: ' + (st.lastUsg.spleen ? st.lastUsg.spleen + ' cm' : 'Esplenomegalia') + ' | Axilar: ' + (st.lastUsg.axilla ? st.lastUsg.axilla + ' cm' : 'Linfonodomegalias') + ' | Cervical: ' + (st.lastUsg.cervical ? st.lastUsg.cervical + ' cm' : '—')
+    : 'Sem ultrassom cadastrado';
+
+  const msg =
+    '📋 *BOLETIM DE ACOMPANHAMENTO — LLC*\n' +
+    '👤 *Paciente:* Laci Figueiredo Neves (72 anos)\n' +
+    '📅 *Data do Relatório:* ' + formatDateBR(todayISO()) + '\n\n' +
+    '🩺 *ESTADIAMENTO CLÍNICO ATUAL:*\n' +
+    '• Classificação: *' + st.rai + ' / ' + st.binet + '*\n' +
+    '• Perfil Imunofenotípico: LLC típica (CD5+, CD19+, CD20+, CD200+, Kappa+, CD34-, CD38-)\n' +
+    '• Conduta Atual: ' + st.conduta + '\n\n' +
+    '💪 *ESTADO GERAL (Últimos 7 dias - ' + st.last7.length + ' registros):*\n' +
+    '• ' + estadoGeral + '\n\n' +
+    '🩸 *ÚLTIMO HEMOGRAMA (' + formatDateBR(st.lastLab.date) + '):*\n' +
+    '• Leucócitos: ' + (st.lastLab.leuco ? st.lastLab.leuco.toLocaleString('pt-BR') + '/mm³' : '—') + '\n' +
+    '• Linfócitos: *' + st.lastLab.linfo.toLocaleString('pt-BR') + '/mm³* (' + varTxt + ')\n' +
+    '• Hemoglobina: *' + st.lastLab.hb + ' g/dL* | Plaquetas: *' + st.lastLab.plaq + ' mil/mm³*\n' +
+    '• LDH: ' + (st.lastLab.ldh ? st.lastLab.ldh + ' U/L' : '—') + ' | Beta-2-Microglobulina: ' + (st.lastLab.b2m ? st.lastLab.b2m + ' mg/L' : '—') + '\n\n' +
+    '🖥️ *ÚLTIMO ULTRASSOM:*\n' +
+    '• ' + usgTxt;
+
+  const box = document.getElementById('whatsPreviewBox');
+  const ta = document.getElementById('whatsPreviewText');
+  box.style.display = 'block';
+  ta.value = msg;
+  ta.select();
+  try {
+    document.execCommand('copy');
+  } catch (e) {}
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(msg).catch(function() {});
+  }
+  showToast('📋 Resumo completo copiado! Cole no WhatsApp.');
+}
+
+// ==================== CHECKLISTS & BACKUP ====================
+function saveChecks() {
+  document.querySelectorAll('.schedule-chk').forEach(function(cb) {
+    appState.checks[cb.id] = cb.checked;
+  });
+  saveState();
+}
+
+function loadChecks() {
+  Object.keys(appState.checks || {}).forEach(function(id) {
+    const el = document.getElementById(id);
+    if (el) el.checked = !!appState.checks[id];
+  });
+}
+
+function exportarBackup() {
+  const blob = new Blob([JSON.stringify(appState, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'backup-llc-sr-laci-' + todayISO() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('⬇️ Backup (.json) baixado!');
+}
+
+function importarBackup(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (imported.labs && imported.diary) {
+        appState = imported;
+        saveState();
+        renderExamLists();
+        renderDashboard();
+        renderDiaryRecent();
+        loadChecks();
+        atualizarTravaCerveja();
+        showToast('✅ Backup importado com sucesso!');
+      } else {
+        showToast('Arquivo de backup inválido.', true);
+      }
+    } catch (err) {
+      showToast('Erro ao ler o arquivo JSON.', true);
     }
-    render();
+  };
+  reader.readAsText(file);
+}
+
+function formatDateBR(iso) {
+  if (!iso || !iso.includes('-')) return iso || '';
+  const parts = iso.split('-');
+  return parts[2] + '/' + parts[1] + '/' + parts[0];
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// ==================== INICIALIZAÇÃO & EVENT LISTENERS SEGUROS ====================
+document.addEventListener('DOMContentLoaded', function() {
+  // Datas padrão
+  document.getElementById('diaryDate').value = todayISO();
+  document.getElementById('labDate').value = todayISO();
+  document.getElementById('usgDate').value = todayISO();
+
+  // Navegação das Abas
+  document.querySelectorAll('.nav-tab').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      switchTab(btn.getAttribute('data-tab'));
+    });
+  });
+
+  // Botões do Diário
+  document.getElementById('diaryDate').addEventListener('change', atualizarTravaCerveja);
+  document.getElementById('btnSimularOntem').addEventListener('click', simularOntemOk);
+  document.getElementById('btnResetarHoje').addEventListener('click', resetarHoje);
+  document.getElementById('btnSalvarDiario').addEventListener('click', salvarDiario);
+
+  document.querySelectorAll('[data-energy]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      selectEnergy(btn.getAttribute('data-energy'));
+    });
+  });
+
+  document.querySelectorAll('.symptom-chip').forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      toggleSymptom(chip.getAttribute('data-sym'));
+    });
+  });
+
+  document.querySelectorAll('[data-act]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      toggleActivity(btn.getAttribute('data-act'));
+    });
+  });
+
+  document.querySelectorAll('[data-drink]').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      selectDrink(btn.getAttribute('data-drink'));
+    });
+  });
+
+  // Delegação para excluir item do diário
+  document.getElementById('diaryRecentList').addEventListener('click', function(e) {
+    const delDate = e.target.getAttribute('data-del-diary');
+    if (delDate) {
+      appState.diary = appState.diary.filter(function(d) { return d.date !== delDate; });
+      saveState();
+      renderDiaryRecent();
+      atualizarTravaCerveja();
+      showToast('Registro diário removido.');
+    }
+  });
+
+  // Botões da Aba 2 (Exames & IA Local)
+  document.getElementById('dropZoneTrigger').addEventListener('click', function() {
+    document.getElementById('aiFileInput').click();
+  });
+  document.getElementById('aiFileInput').addEventListener('change', processarArquivoComIA);
+  document.getElementById('btnInterpretarTexto').addEventListener('click', interpretarTextoColado);
+  document.getElementById('btnSalvarHemograma').addEventListener('click', salvarHemograma);
+  document.getElementById('btnSalvarUltrassom').addEventListener('click', salvarUltrassom);
+
+  // Delegação para abrir anexo ou excluir exame
+  document.getElementById('tab-exames').addEventListener('click', function(e) {
+    const openId = e.target.getAttribute('data-open-file');
+    if (openId) {
+      openSavedFile(openId);
+      return;
+    }
+    const delLabId = e.target.getAttribute('data-del-lab');
+    if (delLabId) {
+      appState.labs = appState.labs.filter(function(x) { return x.id !== delLabId; });
+      saveState();
+      renderExamLists();
+      showToast('Hemograma removido.');
+      return;
+    }
+    const delUsgId = e.target.getAttribute('data-del-usg');
+    if (delUsgId) {
+      appState.usg = appState.usg.filter(function(x) { return x.id !== delUsgId; });
+      saveState();
+      renderExamLists();
+      showToast('Ultrassom removido.');
+    }
+  });
+
+  // Botões da Aba 3 (Painel & Estadiamento)
+  document.getElementById('btnCopiarWhats').addEventListener('click', copiarResumoWhatsApp);
+  document.getElementById('btnImprimir').addEventListener('click', function() { window.print(); });
+  document.getElementById('btnExportBackup').addEventListener('click', exportarBackup);
+  document.getElementById('btnImportBackupTrigger').addEventListener('click', function() {
+    document.getElementById('importFile').click();
+  });
+  document.getElementById('importFile').addEventListener('change', importarBackup);
+
+  document.querySelectorAll('.schedule-chk').forEach(function(cb) {
+    cb.addEventListener('change', saveChecks);
+  });
+
+  // Renderizações iniciais
+  atualizarTravaCerveja();
+  renderDiaryRecent();
+  renderExamLists();
+  loadChecks();
+});
 </script>
 </body>
 </html>
